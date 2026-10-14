@@ -2,7 +2,14 @@ from typing import Any
 import asyncio
 import httpx
 import os
+import sys
 from mcp.server.fastmcp import FastMCP
+
+# Windows console mặc định dùng cp1252, không encode được emoji trong log.
+# Chuyển stdout/stderr sang UTF-8 để server khởi động được trên mọi nền tảng.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8")
 
 # Initialize FastMCP server
 port = int(os.getenv("PORT", 8085))
